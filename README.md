@@ -1,4 +1,4 @@
-# LLM-RAG-TensorRT
+# RAG-TensorRT-MiniGPT2
 
 🚀 A Retrieval-Augmented Generation (RAG) pipeline built with **PyTorch** and accelerated using **NVIDIA TensorRT**.  
 This project demonstrates how to combine **custom Transformer (GPT2-style) layers** with **TensorRT inference optimization**,  
