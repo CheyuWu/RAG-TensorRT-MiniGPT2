@@ -11,3 +11,6 @@ lint:
 format:
 	black .
 	ruff check .
+
+test:
+	pytest . -s
