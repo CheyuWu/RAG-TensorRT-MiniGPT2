@@ -1,4 +1,4 @@
-# RAG-MiniGPT2
+# Retrieval-Augmented Generation with GPT
 
 🚀 A Retrieval-Augmented Generation (RAG) pipeline using **Hugging Face Transformers**.  
 This project demonstrates how to combine **retrieval** with **Hugging Face models** for question answering.
