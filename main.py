@@ -1,14 +1,45 @@
+import logging
 from src.pipeline.rag_system import RAGSystem
-
+import sys
 
 DATA_PATH = "src/data/sample_docs.txt"
 
 
+def setup_logging():
+    """Setup logging system - output to both file and console"""
+    # Create logger
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+
+    # Clear existing handlers
+    logger.handlers.clear()
+
+    # Setup formatter
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+    )
+
+    color_formatter = logging.Formatter("%(message)s")
+    console_handler = logging.StreamHandler(sys.stdout)
+    console_handler.setLevel(logging.INFO)
+    console_handler.setFormatter(color_formatter)
+    logger.addHandler(console_handler)
+
+    # Export handler - output to log.txt
+    file_handler = logging.FileHandler("log.txt", mode="a", encoding="utf-8")
+    file_handler.setLevel(logging.INFO)
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
+
+    return logger
+
+
 def main():
     """Main function - includes while loop for interactive inference"""
-
-    print("=== RAG System with GPT-2 ===")
-    print("Initializing system...")
+    logger = setup_logging()
+    logger.info("=== RAG System with GPT-2 ===")
+    logger.info("Initializing system...")
 
     # Initialize RAG system
     rag = RAGSystem(
@@ -21,13 +52,11 @@ def main():
         sample_docs = [line.strip() for line in f if line.strip()]
     rag.add_documents(sample_docs)
 
-    print("\n" + "=" * 50)
-    print("RAG System is ready!")
-    print("You can ask questions about the documents.")
-    print("Type 'quit', 'exit', or 'q' to stop.")
-    print("Type 'docs' to see all documents.")
-    print("Type 'clear' to clear the screen.")
-    print("=" * 50)
+    logger.info("RAG System is ready!")
+    logger.info("You can ask questions about the documents.")
+    logger.info("Type 'quit', 'exit', or 'q' to stop.")
+    logger.info("Type 'docs' to see all documents.")
+    logger.info("Type 'clear' to clear the screen.")
 
     # Main while loop
     while True:
@@ -37,14 +66,14 @@ def main():
 
             # Check exit conditions
             if user_input.lower() in ["quit", "exit", "q"]:
-                print("👋 Goodbye!")
+                logger.info("👋 Goodbye!")
                 break
 
             # Handle special commands
             if user_input.lower() == "docs":
-                print("\n📚 Current documents:")
+                logger.info("📚 Current documents:")
                 for i, doc in enumerate(rag.retriever.docs, 1):
-                    print(f"{i}. {doc}")
+                    logger.info(f"{i}. {doc}")
                 continue
 
             if user_input.lower() == "clear":
@@ -55,33 +84,33 @@ def main():
 
             # Check for empty input
             if not user_input:
-                print("❌ Please enter a question.")
+                logger.warning("❌ Please enter a question.")
                 continue
 
-            print(f"\n🔍 Searching for relevant information...")
+            logger.info("🔍 Searching for relevant information...")
 
             # Perform RAG query
             result = rag.query(question=user_input, top_k=3, max_length=150)
 
             # Display results
-            print(f"\n📖 Retrieved Documents:")
+            logger.info("📖 Retrieved Documents:")
             if result["retrieved_docs"]:
                 for i, doc in enumerate(result["retrieved_docs"], 1):
-                    print(f"   {i}. {doc}")
+                    logger.info(f"   {i}. {doc}")
             else:
-                print("   No relevant documents found.")
+                logger.info("   No relevant documents found.")
 
-            print(f"\n💬 Generated Response:")
-            print(f"   {result['response']}")
+            logger.info("\n💬 Generated Response:")
+            logger.info(f"   {result['response']}")
 
-            print("-" * 50)
+            logger.info("-" * 50)
 
         except KeyboardInterrupt:
-            print("\n\n👋 Interrupted by user. Goodbye!")
+            logger.info("👋 Interrupted by user. Goodbye!")
             break
         except Exception as e:
-            print(f"\n❌ Error occurred: {e}")
-            print("Please try again with a different question.")
+            logger.error(f"❌ Error occurred: {e}")
+            logger.info("Please try again with a different question.")
 
 
 if __name__ == "__main__":
