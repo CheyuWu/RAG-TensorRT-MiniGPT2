@@ -11,3 +11,11 @@ This project demonstrates how to combine **retrieval** with **Hugging Face model
 
 ## 📌 Motivation
 Modern LLM-based applications require not only accurate answers (via RAG)
+
+
+## Launch the Demo
+> You can change the model and dataset in the `main.py` file
+```bash=
+$ python main.py
+```
+
