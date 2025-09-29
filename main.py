@@ -1,8 +1,13 @@
 import logging
+from src.config.gpt_config import (
+    DATA_PATH,
+    GPT2_MODEL,
+    MAX_LENGTH,
+    RETRIEVER_MODEL,
+    TOP_K,
+)
 from src.pipeline.rag_system import RAGSystem
 import sys
-
-DATA_PATH = "src/data/sample_docs.txt"
 
 
 def setup_logging():
@@ -43,8 +48,8 @@ def main():
 
     # Initialize RAG system
     rag = RAGSystem(
-        retriever_model="all-MiniLM-L6-v2",
-        gpt2_model="gpt2-medium",  # Can be changed to "gpt2-medium", "gpt2-large", "gpt2-xl"
+        retriever_model=RETRIEVER_MODEL,
+        gpt2_model=GPT2_MODEL,
     )
 
     # Load sample documents from file
@@ -90,7 +95,7 @@ def main():
             logger.info("🔍 Searching for relevant information...")
 
             # Perform RAG query
-            result = rag.query(question=user_input, top_k=3, max_length=150)
+            result = rag.query(question=user_input, top_k=TOP_K, max_length=MAX_LENGTH)
 
             # Display results
             logger.info("📖 Retrieved Documents:")
